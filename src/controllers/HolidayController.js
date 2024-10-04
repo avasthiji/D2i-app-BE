@@ -38,6 +38,18 @@ module.exports = {
     }
   },
 
+  //show
+  show: async (req, res, next) => {
+    try {
+      const holidayId = req.params.holiday_id;
+      const data = await HolidayService.getHolidayByID(holidayId);
+      res.status(200).json(ApiResponse("success", data));
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+
   update: async (req, res, next) => {
     try {
       const { is_admin } = req.auth;

@@ -1,9 +1,11 @@
+const { NotFoundError } = require("../exceptions");
 const { ApiResponse } = require("../utils/ApiHelper");
 const { TABLE_NAMES } = require("../utils/db");
 const {
   insertRecord,
   getRecordsByKey,
   updateRecordsByKey,
+  getRecordByKey,
 } = require("../utils/QueryBuilder");
 
 module.exports.HolidayService = {
@@ -51,6 +53,21 @@ module.exports.HolidayService = {
       throw new Error("Error Fetching holidays:" + error.message);
     }
   },
+
+  getHolidayByID: async (holidayId) => {
+    try {
+      const holiday = await getRecordByKey(TABLE_NAMES.HOLIDAY, {
+        _id: holidayId,
+      });
+      if (!holiday) {
+        throw new Error("Record not Found");
+      }
+      return holiday;
+    } catch (error) {
+      throw new NotFoundError(error.message);
+    }
+  },
+
   updateHoliday: async (id, { name, date }) => {
     try {
       const updatedHoliday = await updateRecordsByKey(
